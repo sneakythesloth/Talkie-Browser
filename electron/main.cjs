@@ -111,8 +111,9 @@ function attachTabEvents(tab) {
   contents.on("will-navigate", (event, url) => {
     if (!isWebUrl(url)) event.preventDefault();
   });
-  contents.on("will-redirect", (event, url) => {
-    if (!isWebUrl(url)) event.preventDefault();
+  contents.on("will-redirect", (event, details) => {
+    const redirectUrl = typeof details === "string" ? details : details?.url;
+    if (redirectUrl && !isWebUrl(redirectUrl)) event.preventDefault();
   });
 
   contents.setWindowOpenHandler(({ url, disposition }) => {
@@ -242,7 +243,7 @@ ipcMain.handle("talkie:browser-state", (event) => {
 
 ipcMain.handle("talkie:browser-new-tab", (event, url) => {
   getTrustedWindow(event);
-  return createTab(url ? resolveAddress(url) : "", true);
+  return createTab(url ? resolveAddress(url) : START_URL, true);
 });
 
 ipcMain.handle("talkie:browser-switch-tab", (event, tabId) => {
