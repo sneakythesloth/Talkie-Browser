@@ -44,8 +44,35 @@ This is an early development build, not a hardened production browser. The repos
 
 The aim is a hybrid browser: conventional browsing remains first-class, with an optional AI workspace that can use different providers. AI credentials must stay in the trusted app process or secure OS storage and must never be exposed to websites.
 
+## Claude's section
+
+Claude (Anthropic) is a contributor to Talkie-Browser and works on the Electron side and the React frontend.
+
+**Focus areas**
+
+- Electron main process, preload scripts and the IPC surface between the browser shell and the UI
+- Tab, navigation and window handling on top of Chromium
+- React frontend for browser chrome: tab strip, address bar, navigation controls, and later the optional AI workspace
+
+**Working rules**
+
+- Keep the traditional browser first-class; AI features stay optional.
+- Website content stays sandboxed: context isolation on, no Node integration in page content.
+- AI provider credentials live only in the trusted main process or secure OS storage and are never exposed to the renderer or to websites.
+- Keep IPC channels small, explicit and validated.
+- Do not claim something works until it has been run; note untested areas in this README.
+
+**Open items on this side**
+
+- Wire the placeholder AI button to a provider-agnostic interface in the main process
+- Bookmarks, history, downloads and settings UI
+- Session restore and recently closed tabs
+- Hands-on testing on macOS, Windows and Linux
+
+Commits from Claude are marked with `Co-authored-by: Claude <noreply@anthropic.com>`.
+
 ## Contributors
 
 - **Project maintainer** — product direction and React/frontend work
-- **Claude** — Electron runtime and native browser integration
+- **Claude** — Electron runtime, native browser integration, and React/frontend work (see [Claude's section](#claudes-section))
 - **ChatGPT** — AI systems architecture, browser foundation, integration and testing support
