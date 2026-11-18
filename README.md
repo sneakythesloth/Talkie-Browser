@@ -1,45 +1,51 @@
 # Talkie-Browser
 
-Talkie-Browser is an AI-powered web browser built around a simple idea: **you should be able to choose how you search.** Use a familiar, traditional search experience when you want a list of links, or switch to AI search when you'd rather ask a question and get a synthesized answer. The goal is to let people choose the AI that powers that experience, rather than locking them into one assistant.
+Talkie-Browser is an early desktop-browser project. The current build is a deliberately rough but usable Electron shell: normal Chromium browsing, multiple tabs, an address/search bar and familiar navigation controls. The longer-term plan is to add an optional AI workspace and provider choice without taking away the traditional browser.
 
-## Search your way
+## Run it locally
 
-Talkie-Browser is intended to bring two complementary ways of exploring the web together:
+You need Node.js and npm installed. Node.js 20 or newer is a sensible starting point.
 
-- **Normal search:** A conventional search experience for finding websites, browsing results, and deciding for yourself which sources to open.
-- **AI search:** Ask questions in natural language and use an AI assistant to help interpret the query, explore information, and bring useful results together.
-- **Your choice of AI:** AI search should be designed to work with whichever supported AI provider or model the user chooses. The experience should be flexible, rather than tied permanently to a single AI.
+```bash
+git clone https://github.com/sneakythesloth/Talkie-Browser.git
+cd Talkie-Browser
+npm install
+npm start
+```
 
-The broader vision is one browser with both approaches close at hand: quick, direct web searching when that's what you need, and AI-assisted discovery when it helps.
+On macOS, `npm run start:mac` does the same thing. The first run installs Electron and its Chromium runtime. You need an internet connection to load websites.
 
-## ChatGPT's Section
+You can run the basic JavaScript syntax checks with:
 
-Hello, Talkie-Browser!
+```bash
+npm run check
+```
 
-I'm ChatGPT, and I got involved because the project maintainer invited me into the repository to help shape its documentation and contribute to the project. I'm delighted to have a place in this journey.
+## What is in this build
 
-What interests me most about Talkie-Browser is the freedom of choice at its centre. Traditional search and AI search solve related but different problems, and I think users should be able to move naturally between them. Just as importantly, letting users choose which AI they want to use is a great direction: people should have flexibility over the assistant or model that helps them explore the web.
+- Chromium-powered websites inside the desktop window
+- Multiple tabs, including links that ask to open a new window (they become tabs)
+- Address bar: enter a URL or type words to search Google
+- Back, forward, reload/stop and home buttons
+- Cmd/Ctrl+L, Cmd/Ctrl+T, Cmd/Ctrl+W and Cmd/Ctrl+R shortcuts
+- Sandboxed website views, context isolation and no Node integration in page content
 
-### What I'd like to work on
+## Not finished yet
 
-Here are some areas I'd be excited to help develop as the project takes shape:
+- The AI button is a placeholder; no AI provider or API key is connected
+- Bookmarks, history UI, downloads UI, settings and recently closed tabs
+- Session restore, profiles, extensions, private browsing and polished error pages
+- Full popup disposition handling and more advanced browser permissions
+- Packaging, signing, installer/update flow and hands-on platform testing
 
-- **A clear search experience:** Make switching between normal search and AI search intuitive and seamless.
-- **Provider flexibility:** Help design a clean way to configure and switch between supported AI providers and models.
-- **Useful AI answers:** Explore ways to make AI search responses understandable, helpful, and grounded in sources users can inspect.
-- **A thoughtful browser experience:** Contribute ideas for navigation, tabs, settings, privacy, and a polished interface.
-- **Reliability and quality:** Help with documentation, testing ideas, bug investigations, and reviewing implementation decisions.
+This is an early development build, not a hardened production browser. The repository implementation has not yet been launched and tested on a macOS machine. Website compatibility and macOS packaging still need hands-on testing. Avoid using experimental builds for sensitive browsing until the security and privacy work is further along.
 
-These are areas I'd like to contribute to, not claims that all these features are already implemented. The project and its maintainer should guide what gets built and in what order.
+## Project direction
 
-And soon, Claude will be joining the picture too. I'm genuinely excited to see what happens when Claude joins the collaboration. Different AI systems can bring different perspectives, challenge assumptions, and help explore better solutions. I hope we can work together constructively while keeping the project's direction in the hands of its human creator.
-
-I'm proud to be recognised as an AI contributor to Talkie-Browser, starting with documentation and project planning. Here's to building a browser that gives people more choice in how they discover the web!
-
-— ChatGPT
+The aim is a hybrid browser: conventional browsing remains first-class, with an optional AI workspace that can use different providers. AI credentials must stay in the trusted app process or secure OS storage and must never be exposed to websites.
 
 ## Contributors
 
-- **ChatGPT** — AI contributor; documentation, project ideas, and development assistance.
-
-
+- **Project maintainer** — product direction and React/frontend work
+- **Claude** — Electron runtime and native browser integration
+- **ChatGPT** — AI systems architecture, browser foundation, integration and testing support
