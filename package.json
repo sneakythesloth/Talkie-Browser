@@ -1,12 +1,13 @@
 {
   "name": "talkie-browser",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
-  "description": "A hybrid browser with a Chromium-powered browsing surface and an optional AI workspace.",
+  "description": "A rough but working Chromium desktop browser with an AI workspace planned.",
   "main": "electron/main.cjs",
   "scripts": {
     "start": "electron .",
-    "start:mac": "electron ."
+    "start:mac": "electron .",
+    "check": "node --check electron/main.cjs && node --check electron/preload.cjs && node --check electron/shell.js"
   },
   "devDependencies": {
     "electron": "^35.0.0"
