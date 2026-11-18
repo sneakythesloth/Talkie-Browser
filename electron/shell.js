@@ -112,6 +112,9 @@ document.addEventListener("keydown", (event) => {
     event.preventDefault();
     address.focus();
     address.select();
+  } else if (key === "t" && event.shiftKey) {
+    event.preventDefault();
+    notify("Recently closed tabs are not available yet.");
   } else if (key === "t") {
     event.preventDefault();
     api.newTab("");
@@ -121,9 +124,6 @@ document.addEventListener("keydown", (event) => {
   } else if (key === "r") {
     event.preventDefault();
     api.reload();
-  } else if (key === "shift" && event.key.toLowerCase() === "t") {
-    // Placeholder: recently closed tabs are not stored yet.
-    notify("Recently closed tabs are not available yet.");
   }
 });
 
