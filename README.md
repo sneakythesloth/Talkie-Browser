@@ -15,19 +15,40 @@ npm start
 
 On macOS, `npm run start:mac` does the same thing. The first run installs Electron and its Chromium runtime. You need an internet connection to load websites.
 
-You can run the basic JavaScript syntax checks with:
+`npm start` builds the React UI into `dist/` and then launches Electron. To rebuild the UI automatically while you work, run `npm run dev:ui` in one terminal and `npx electron .` in another (reload the window to pick up changes).
+
+Run the syntax checks, TypeScript typecheck and unit tests with:
 
 ```bash
 npm run check
 ```
 
+## How the code is organised
+
+| Path | What it is |
+| --- | --- |
+| `electron/main.cjs` | Main process: window, tabs (`WebContentsView`), navigation, IPC handlers |
+| `electron/preload.cjs` | Exposes the `window.talkieBrowser` bridge to the UI via `contextBridge` |
+| `electron/browser-api.d.ts` | TypeScript types for the bridge. This is the contract between the UI and the main process |
+| `src/` | React + TypeScript browser chrome (tab strip, toolbar, address bar, status line) |
+| `index.html`, `vite.config.mts` | Vite entry and config. The UI builds to `dist/`, which `main.cjs` loads |
+
+Two rules for UI work:
+
+- **The UI only talks to the main process through `window.talkieBrowser`.** If you need a new capability, add the IPC handler, the preload method and the type in `browser-api.d.ts` together.
+- **The page CSP is strict** (`script-src 'self'; style-src 'self'`). No inline scripts and no `style={{ ... }}` props; use CSS classes in `src/styles.css`.
+
+The height of the browser chrome (116px in `src/styles.css`) must match `TOOLBAR_HEIGHT` in `electron/main.cjs`. A test checks this.
+
 ## What is in this build
 
+- React + TypeScript browser chrome with unit tests
 - Chromium-powered websites inside the desktop window
 - Multiple tabs, including links that ask to open a new window (they become tabs)
-- Address bar: enter a URL or type words to search Google
+- Address bar: enter a URL or type words to search Google (the field is not overwritten while you type)
+- Middle-click a tab to close it
 - Back, forward, reload/stop and home buttons
-- Cmd/Ctrl+L, Cmd/Ctrl+T, Cmd/Ctrl+W and Cmd/Ctrl+R shortcuts
+- Cmd/Ctrl+L, Cmd/Ctrl+T, Cmd/Ctrl+W and Cmd/Ctrl+R shortcuts (only while the browser chrome has focus, not yet while a web page has focus)
 - Sandboxed website views, context isolation and no Node integration in page content
 
 ## Not finished yet
@@ -76,3 +97,4 @@ Commits from Claude are marked with `Co-authored-by: Claude <noreply@anthropic.c
 - **Project maintainer** — product direction and React/frontend work
 - **Claude** — Electron runtime, native browser integration, and React/frontend work (see [Claude's section](#claudes-section))
 - **ChatGPT** — AI systems architecture, browser foundation, integration and testing support
+
