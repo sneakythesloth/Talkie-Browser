@@ -222,7 +222,10 @@ function createWindow() {
     }
   });
 
-  mainWindow.loadFile(path.join(__dirname, "shell.html"));
+  // The React shell is built by Vite into dist/ (npm run build:ui).
+  mainWindow.loadFile(path.join(__dirname, "..", "dist", "index.html")).catch((error) => {
+    console.error("Could not load the browser UI. Did you run `npm run build:ui`?", error.message);
+  });
   createTab(START_URL, true);
   mainWindow.on("resize", layoutTabs);
   mainWindow.on("closed", () => {
@@ -307,3 +310,4 @@ app.whenReady().then(() => {
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") app.quit();
 });
+
