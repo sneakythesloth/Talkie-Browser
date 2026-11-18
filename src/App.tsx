@@ -44,6 +44,15 @@ export default function App({ api }: AppProps) {
     [api, notify]
   );
 
+  // Cmd/Ctrl+L pressed while a web page has focus arrives from the main process.
+  useEffect(
+    () =>
+      api.onFocusAddress(() => {
+        addressRef.current?.focus();
+      }),
+    [api]
+  );
+
   const activeTabId = state?.activeTabId ?? null;
 
   useShortcuts({

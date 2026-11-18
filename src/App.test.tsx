@@ -172,6 +172,12 @@ describe("keyboard shortcuts", () => {
     expect(screen.getByLabelText("Search or enter address")).toHaveFocus();
   });
 
+  it("focuses the address bar when the main process asks (shortcut pressed inside a page)", async () => {
+    const { requestAddressFocus } = await setup();
+    act(() => requestAddressFocus());
+    expect(screen.getByLabelText("Search or enter address")).toHaveFocus();
+  });
+
   it("Ctrl+Shift+T explains recently closed tabs are not available", async () => {
     const { user } = await setup();
     await user.keyboard("{Control>}{Shift>}t{/Shift}{/Control}");
@@ -200,7 +206,7 @@ describe("main-process contract", () => {
 
   it("every method the UI calls exists in the preload bridge", () => {
     const preload = readFileSync("electron/preload.cjs", "utf8");
-    for (const name of ["getState", "newTab", "switchTab", "closeTab", "navigate", "back", "forward", "reload", "home", "onStateChange"]) {
+    for (const name of ["onFocusAddress", "getState", "newTab", "switchTab", "closeTab", "navigate", "back", "forward", "reload", "home", "onStateChange"]) {
       expect(preload).toContain(`${name}:`);
     }
   });

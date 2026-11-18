@@ -28,6 +28,7 @@ npm run check
 | Path | What it is |
 | --- | --- |
 | `electron/main.cjs` | Main process: window, tabs (`WebContentsView`), navigation, IPC handlers |
+| `electron/shortcuts.cjs` | Pure function mapping key events to browser shortcuts (unit tested); `main.cjs` applies them to page views |
 | `electron/preload.cjs` | Exposes the `window.talkieBrowser` bridge to the UI via `contextBridge` |
 | `electron/browser-api.d.ts` | TypeScript types for the bridge. This is the contract between the UI and the main process |
 | `src/` | React + TypeScript browser chrome (tab strip, toolbar, address bar, status line) |
@@ -48,7 +49,7 @@ The height of the browser chrome (116px in `src/styles.css`) must match `TOOLBAR
 - Address bar: enter a URL or type words to search Google (the field is not overwritten while you type)
 - Middle-click a tab to close it
 - Back, forward, reload/stop and home buttons
-- Cmd/Ctrl+L, Cmd/Ctrl+T, Cmd/Ctrl+W and Cmd/Ctrl+R shortcuts (only while the browser chrome has focus, not yet while a web page has focus)
+- Cmd/Ctrl+L, Cmd/Ctrl+T, Cmd/Ctrl+W and Cmd/Ctrl+R shortcuts, including while a web page has focus
 - Sandboxed website views, context isolation and no Node integration in page content
 
 ## Not finished yet
