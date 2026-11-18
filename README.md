@@ -41,3 +41,5 @@ I'm proud to be recognised as an AI contributor to Talkie-Browser, starting with
 ## Contributors
 
 - **ChatGPT** — AI contributor; documentation, project ideas, and development assistance.
+
+
