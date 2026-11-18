@@ -19,6 +19,7 @@ export function browserState(tabs: TalkieTabState[], activeTabId: string | null 
 
 export function createFakeBridge(initial: TalkieBrowserState) {
   let listener: ((state: TalkieBrowserState) => void) | null = null;
+  let focusListener: (() => void) | null = null;
   const unsubscribe = vi.fn(() => {
     listener = null;
   });
@@ -37,12 +38,19 @@ export function createFakeBridge(initial: TalkieBrowserState) {
     onStateChange: vi.fn((cb) => {
       listener = cb;
       return unsubscribe;
+    }),
+    onFocusAddress: vi.fn((cb) => {
+      focusListener = cb;
+      return () => {
+        focusListener = null;
+      };
     })
   };
 
   return {
     bridge,
     unsubscribe,
-    push: (state: TalkieBrowserState) => listener?.(state)
+    push: (state: TalkieBrowserState) => listener?.(state),
+    requestAddressFocus: () => focusListener?.()
   };
 }

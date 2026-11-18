@@ -25,6 +25,8 @@ export interface TalkieBrowserBridge {
   home(): Promise<void>;
   openExternal(url: string): Promise<void>;
   onStateChange(callback: (state: TalkieBrowserState) => void): () => void;
+  /** Fired when the main process wants the address bar focused (e.g. Cmd/Ctrl+L pressed inside a web page). */
+  onFocusAddress(callback: () => void): () => void;
 }
 
 declare global {
@@ -34,3 +36,4 @@ declare global {
 }
 
 export {};
+

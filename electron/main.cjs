@@ -1,5 +1,6 @@
 const { app, BrowserWindow, WebContentsView, ipcMain, shell } = require("electron");
 const path = require("node:path");
+const { matchShortcut } = require("./shortcuts.cjs");
 
 const TOOLBAR_HEIGHT = 116;
 const START_URL = "https://www.google.com";
@@ -91,6 +92,35 @@ function layoutTabs() {
   }
 }
 
+function toggleReload(tabId = activeTabId) {
+  const contents = getTab(tabId)?.webContents;
+  if (!contents || contents.isDestroyed()) return;
+  if (contents.isLoading()) contents.stop();
+  else contents.reload();
+}
+
+// Shortcuts pressed while a web page has focus never reach the shell UI,
+// so they are handled here from the tab's before-input-event.
+function runShortcut(action) {
+  switch (action) {
+    case "focus-address":
+      if (mainWindow && !mainWindow.isDestroyed()) {
+        mainWindow.webContents.focus();
+        mainWindow.webContents.send("talkie:focus-address");
+      }
+      break;
+    case "new-tab":
+      createTab(START_URL, true);
+      break;
+    case "close-tab":
+      if (activeTabId) closeTab(activeTabId);
+      break;
+    case "reload":
+      toggleReload();
+      break;
+  }
+}
+
 function attachTabEvents(tab) {
   const contents = tab.webContents;
   const update = () => {
@@ -122,6 +152,13 @@ function attachTabEvents(tab) {
       createTab(url, disposition !== "background-tab");
     }
     return { action: "deny" };
+  });
+
+  contents.on("before-input-event", (event, input) => {
+    const action = matchShortcut(input, process.platform === "darwin");
+    if (!action) return;
+    event.preventDefault();
+    runShortcut(action);
   });
 
   contents.on("render-process-gone", (_event, details) => {
@@ -282,10 +319,7 @@ ipcMain.handle("talkie:browser-forward", (event) => {
 
 ipcMain.handle("talkie:browser-reload", (event) => {
   getTrustedWindow(event);
-  const contents = getTab()?.webContents;
-  if (!contents) return;
-  if (contents.isLoading()) contents.stop();
-  else contents.reload();
+  toggleReload();
 });
 
 ipcMain.handle("talkie:browser-home", (event) => {

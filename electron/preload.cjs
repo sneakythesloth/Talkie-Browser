@@ -11,6 +11,12 @@ contextBridge.exposeInMainWorld("talkieBrowser", {
   reload: () => ipcRenderer.invoke("talkie:browser-reload"),
   home: () => ipcRenderer.invoke("talkie:browser-home"),
   openExternal: (url) => ipcRenderer.invoke("talkie:browser-open-external", url),
+  onFocusAddress: (callback) => {
+    if (typeof callback !== "function") return () => {};
+    const listener = () => callback();
+    ipcRenderer.on("talkie:focus-address", listener);
+    return () => ipcRenderer.removeListener("talkie:focus-address", listener);
+  },
   onStateChange: (callback) => {
     if (typeof callback !== "function") return () => {};
     const listener = (_event, state) => callback(state);
@@ -18,3 +24,4 @@ contextBridge.exposeInMainWorld("talkieBrowser", {
     return () => ipcRenderer.removeListener("talkie:browser-state", listener);
   }
 });
+
